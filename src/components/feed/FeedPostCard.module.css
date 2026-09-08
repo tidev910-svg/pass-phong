@@ -1,0 +1,112 @@
+/*
+ * Thẻ "bài đăng" kiểu Facebook cho Bảng tin — ngoại lệ style riêng của
+ * /bang-tin (xem UI_STYLE_GUIDE.md): đứng thẳng, không tilt/washi tape, vẫn
+ * dùng đúng token forest/mustard + font Baloo 2/Be Vietnam Pro qua `Price`/
+ * `Tag`/`Button` (kế thừa theme antd chung), chỉ đổi layout/khối.
+ */
+.card {
+  background: var(--paper-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+}
+
+.avatarLetter {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.regionName {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.timestamp {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.passedBadge {
+  margin: 0;
+}
+
+.bodyLink {
+  display: block;
+  padding: 0 16px 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.matchLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mustard-dark);
+  margin-bottom: 6px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.moveOutText {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.distanceText {
+  display: block;
+  font-size: 12px;
+  color: var(--forest-dark);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.description {
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: var(--ink);
+}
+
+.tagsRow {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 8px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}

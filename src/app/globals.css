@@ -1,0 +1,488 @@
+:root {
+  color-scheme: light;
+
+  /*
+   * Dorm Bulletin Board — nguồn CSS custom property DUY NHẤT.
+   * PHẢI khớp với hằng số hex tương ứng trong src/theme/tokens.ts (antd cần
+   * giá trị hex thật, không resolve được var() khi tính sắc độ theme).
+   */
+  --paper: #f8f3e7;
+  --paper-card: #fffdf6;
+  --ink: #2b2a24;
+  --ink-soft: #5b584c;
+  --forest: #2f5233;
+  --forest-dark: #22401f;
+  --mustard: #e3a234;
+  --mustard-dark: #b77e1f;
+  --border: #dcd2b4;
+
+  /* Token riêng cho skill loading-toast-feedback-style — chỉ dùng cho toast
+     lỗi, không phải màu nhấn thứ 3 của hệ thống (xem theme/tokens.ts). */
+  --danger: #c0433a;
+  --danger-bg: #fbeae8;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  /* Nền giấy corkboard: chấm bi mờ lặp lại, KHÔNG dùng ảnh texture nặng. */
+  background:
+    radial-gradient(circle at 1px 1px, rgba(43, 42, 36, 0.06) 1px, transparent 0) 0 0/22px 22px,
+    var(--paper);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Panel "bảng tin" dùng chung: filter bar, form, card thông tin chi tiết —
+   viền đứt nét + bo góc vừa, KHÔNG dùng hard shadow (khác thẻ tin đăng bên
+   dưới). Dùng qua className="board-panel" kết hợp Card variant="borderless"
+   để không bị đè bởi viền mặc định của antd.
+   `border-width: 2px` (không phải 1px) — khớp ngôn ngữ viền đậm dùng ở
+   button/pinned-card. `box-shadow: none` bắt buộc phải khai rõ — antd Card
+   tự có sẵn 1 shadow mờ nhiều lớp mặc định (xác nhận qua computed style thật)
+   âm thầm lọt qua nếu không tắt, phá quy tắc "KHÔNG shadow" của khối này. */
+.board-panel {
+  background: var(--paper-card);
+  border: 2px dashed var(--border);
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+/* Ngoại lệ đã ghi nhận (xem UI_STYLE_GUIDE.md "Ngoại lệ đã ghi nhận"): thẻ
+   đăng nhập/đăng ký dùng thêm hard offset shadow riêng trên nền board-panel
+   — các board-panel khác (filter bar, form đăng tin...) vẫn giữ nguyên
+   KHÔNG shadow theo đúng quy tắc chung, không đổi hành vi ở nơi khác. */
+.auth-card {
+  box-shadow: 5px 5px 0 rgba(43, 42, 36, 0.9) !important;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Input/Select/DatePicker — viền đậm hơn (2px, khớp ngôn ngữ chung) + trạng
+   thái focus rõ ràng bằng đổi màu viền sang forest, KHÔNG dùng ring mờ mặc
+   định của antd (giữ đúng tinh thần "chỉ viền cứng, không glow/shadow mờ"
+   của toàn hệ thống). Dùng `:focus`/`:focus-within` thay vì đoán tên class
+   `-focused` antd tự thêm — antd v6 không add class đó cho `Input` thường
+   trong bản đang dùng (xác nhận qua DOM thật), `:focus-within` xử lý luôn
+   trường hợp ô nhập lồng trong wrapper (Input.Password, Select, DatePicker). */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-picker,
+.ant-select-selector {
+  border-width: 2px !important;
+}
+
+.ant-input:focus,
+.ant-input-affix-wrapper:focus-within,
+.ant-picker:focus-within,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--forest) !important;
+  box-shadow: none !important;
+}
+
+/* Icon con mắt ẩn/hiện mật khẩu — mặc định antd dùng màu đen mờ chung
+   chung, đổi sang đúng token chữ phụ của hệ thống. */
+.ant-input-password-icon {
+  color: var(--ink-soft) !important;
+}
+
+/* Nhãn "băng keo washi" viết tay — CHỈ dùng ở 1–2 vị trí/màn hình, không lạm
+   dụng font Pacifico (xem TapeLabel.tsx). */
+.tape-label {
+  display: inline-block;
+  font-family: var(--font-pacifico), cursive;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--mustard);
+  padding: 6px 16px 4px;
+  border-radius: 4px;
+  transform: rotate(-4deg);
+  box-shadow: 2px 2px 0 rgba(43, 42, 36, 0.25);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Ant Design overrides — phần "hard offset shadow" và viền dày cho nút
+   chính không có sẵn trong token system của antd nên bổ sung ở đây thay vì
+   lặp lại thành inline style ở từng nơi dùng Button. */
+.ant-btn-primary {
+  border: 2px solid var(--ink) !important;
+  box-shadow: 3px 3px 0 var(--forest-dark) !important;
+  transition: transform 150ms ease, box-shadow 150ms ease !important;
+}
+
+.ant-btn-primary:not(:disabled):hover,
+.ant-btn-primary:not(:disabled):active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--forest-dark) !important;
+}
+
+.ant-btn-default:not(.ant-btn-dangerous) {
+  border: 2px solid var(--ink);
+  background: var(--paper-card);
+  color: var(--ink);
+}
+
+.ant-btn-default:not(.ant-btn-dangerous):not(:disabled):hover {
+  border-color: var(--forest);
+  color: var(--forest);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Skeleton loading (loading-toast-feedback-style) — skeleton PHẲNG, không
+   tilt/washi-tape/hard-shadow (những chi tiết đó chỉ dành cho nội dung thật
+   đã load xong). Shimmer dùng chung 1 override toàn cục thay vì lặp lại
+   animation ở từng component skeleton riêng lẻ. */
+.ant-skeleton-content .ant-skeleton-paragraph > li,
+.ant-skeleton-content .ant-skeleton-title,
+.ant-skeleton-avatar,
+.ant-skeleton-button,
+.ant-skeleton-input,
+.ant-skeleton-image {
+  background: linear-gradient(
+    100deg,
+    rgba(43, 42, 36, 0.06) 30%,
+    rgba(43, 42, 36, 0.12) 50%,
+    rgba(43, 42, 36, 0.06) 70%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: skeleton-sweep 1.8s ease-in-out infinite !important;
+}
+
+@keyframes skeleton-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Toast / thông báo (message + notification) — thẻ nổi phía trên trang,
+   KHÔNG có washi tape/tilt/corkboard (khác thẻ tin đăng). Viền ink 2px +
+   hard offset shadow giống ngôn ngữ shadow chung của hệ thống, ghi đè hẳn
+   shadow mờ mặc định của antd. Dải màu bên trái báo hiệu loại toast — CHỈ 3
+   loại: success (forest), error (danger), info/warning (mustard), không
+   thêm loại thứ 4. */
+/*
+ * Class thật render ra DOM (kiểm bằng Playwright, KHÁC với tên suy ra từ đọc
+ * source antd — antd gộp "content" vào thẳng `.ant-message-notice-wrapper`,
+ * không có `.ant-message-notice-content` như cấu trúc TypeScript gợi ý):
+ *   <div class="ant-message-notice ant-message-notice-error ...">
+ *     <div class="ant-message-notice-wrapper ant-message-error">
+ *       <div class="ant-message-notice-icon ant-message-notice-icon-error">...</div>
+ *       <div class="ant-message-notice-title">...</div>
+ *
+ * `.ant-message-notice-wrapper` mới là khối hiển thị thật (icon + text) cần
+ * border/shadow/bg; class loại toast (`ant-message-error`...) nằm CÙNG 1
+ * phần tử với wrapper (compound selector, không phải descendant).
+ */
+.ant-message-notice-wrapper,
+.ant-notification-notice {
+  background: var(--paper-card) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 10px !important;
+  box-shadow: 4px 4px 0 rgba(43, 42, 36, 0.9) !important;
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif !important;
+}
+
+.ant-message-notice-wrapper.ant-message-success {
+  border-left: 5px solid var(--forest) !important;
+}
+
+.ant-message-notice-wrapper.ant-message-error {
+  border-left: 5px solid var(--danger) !important;
+}
+
+.ant-message-notice-wrapper.ant-message-info,
+.ant-message-notice-wrapper.ant-message-warning {
+  border-left: 5px solid var(--mustard) !important;
+}
+
+.ant-notification-notice:has(.ant-notification-notice-icon-success) {
+  border-left: 5px solid var(--forest) !important;
+}
+
+.ant-notification-notice:has(.ant-notification-notice-icon-error) {
+  border-left: 5px solid var(--danger) !important;
+}
+
+.ant-notification-notice:has(.ant-notification-notice-icon-info),
+.ant-notification-notice:has(.ant-notification-notice-icon-warning) {
+  border-left: 5px solid var(--mustard) !important;
+}
+
+.ant-message-notice-icon-success .anticon,
+.ant-notification-notice-icon-success {
+  color: var(--forest) !important;
+}
+
+.ant-message-notice-icon-error .anticon,
+.ant-notification-notice-icon-error {
+  color: var(--danger) !important;
+}
+
+.ant-message-notice-icon-info .anticon,
+.ant-message-notice-icon-warning .anticon,
+.ant-notification-notice-icon-info,
+.ant-notification-notice-icon-warning {
+  color: var(--mustard) !important;
+}
+
+/* `.ant-notification-notice-title` — KHÔNG phải `-message` (class đó không
+   tồn tại trong DOM thật, antd đổi prop `message`→`title` ở v6 nhưng docs cũ
+   vẫn còn nhắc `-message`; xác nhận qua DOM thật render bởi `notification.open`
+   trong `useToast.tsx`, cùng cách xác minh đã ghi ở khối message phía trên). */
+.ant-message-notice-title,
+.ant-notification-notice-title {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 13.5px;
+}
+
+.ant-notification-notice-description {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Slider (khoảng giá ở filter khu vực + "Tìm theo nhu cầu") — antd v6 vẽ
+   phần thấy được của handle bằng `::after` (box thật `.ant-slider-handle`
+   chỉ là anchor 10x10 vô hình, `::before` là vùng bắt sự kiện 14x14 vô
+   hình) — xác nhận bằng cách đọc computed style thật qua Playwright, KHÔNG
+   đoán từ tài liệu, cùng tinh thần với ghi chú ở khối message/notification
+   phía trên. Track/rail thì là 2 div phẳng bình thường. */
+.ant-slider-rail {
+  background-color: var(--border) !important;
+}
+
+.ant-slider-track {
+  background-color: var(--forest) !important;
+}
+
+.ant-slider-handle::after {
+  width: 14px !important;
+  height: 14px !important;
+  inset: -2px !important;
+  background-color: var(--forest) !important;
+  border: 2px solid var(--ink) !important;
+  box-shadow: none !important;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Gallery slider trang chi tiết tin (ListingDetailView) — arrow mặc định của
+   antd Carousel quá nhỏ/mờ để bấm trên mobile, đổi thành nút tròn nền ink mờ
+   (đủ tương phản trên mọi ảnh nền) + dot active màu mustard cho khớp bảng màu
+   2 màu nhấn của hệ thống. */
+.listing-gallery-carousel .slick-prev,
+.listing-gallery-carousel .slick-next {
+  width: 36px !important;
+  height: 36px !important;
+  background: rgba(43, 42, 36, 0.55) !important;
+  border-radius: 999px !important;
+  opacity: 1 !important;
+}
+
+.listing-gallery-carousel .slick-prev {
+  inset-inline-start: 10px !important;
+}
+
+.listing-gallery-carousel .slick-next {
+  inset-inline-end: 10px !important;
+}
+
+.listing-gallery-carousel .slick-prev:hover,
+.listing-gallery-carousel .slick-next:hover {
+  background: var(--forest) !important;
+}
+
+/* antd định vị mũi tên (::after) bằng toạ độ px tính sẵn cho nút gốc 16px
+   (arrowSize token) — khi phóng nút lên 36px ở trên mà không sửa lại toạ độ
+   này, mũi tên bị dạt lên góc trên-trái thay vì nằm giữa nút tròn. Ghi đè
+   về căn giữa tuyệt đối bằng top/left 50% + translate, CỘNG THÊM lại đúng
+   góc xoay gốc của antd (rotate -45deg cho prev, 135deg cho next) vì
+   transform không cộng dồn được với transform gốc — chỉ đổi phần định vị,
+   không đổi border/kích thước mũi tên mà antd đã tính sẵn. */
+.listing-gallery-carousel .slick-prev::after,
+.listing-gallery-carousel .slick-next::after {
+  top: 50% !important;
+  inset-inline-start: 50% !important;
+}
+
+.listing-gallery-carousel .slick-prev::after {
+  transform: translate(-50%, -50%) rotate(-45deg) !important;
+}
+
+.listing-gallery-carousel .slick-next::after {
+  transform: translate(-50%, -50%) rotate(135deg) !important;
+}
+
+.listing-gallery-carousel .slick-dots li button {
+  background: rgba(255, 255, 255, 0.65) !important;
+}
+
+.listing-gallery-carousel .slick-dots li.slick-active button {
+  background: var(--mustard) !important;
+}
+
+/* Dải thumbnail bên dưới slider — bấm để nhảy nhanh tới ảnh, viền forest khi
+   đang active, khớp ngôn ngữ viền đậm 2px chung của hệ thống. */
+.listing-gallery-thumbs {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.listing-gallery-thumb {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  opacity: 0.7;
+  transition: opacity 150ms ease, border-color 150ms ease;
+}
+
+.listing-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.listing-gallery-thumb.is-active,
+.listing-gallery-thumb:hover {
+  border-color: var(--forest);
+  opacity: 1;
+}
+
+/* Khối "Liên hệ" trong card thông tin chi tiết tin — tách nền mustard nhạt +
+   viền đứt nét để nổi bật hẳn lên so với phần mô tả phía trên, vì đây là
+   thông tin quan trọng nhất người xem cần (mục tiêu cuối của trang). */
+.listing-contact-panel {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(227, 162, 52, 0.12);
+  border: 2px dashed var(--mustard);
+  border-radius: 10px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Leaflet map container — tự bản thân đè lên header sticky (`SiteHeader`,
+   z-index 10) và mọi UI khác của trang. Nguyên nhân: CSS gốc của Leaflet chỉ
+   đặt `.leaflet-container { position: relative }`, KHÔNG kèm `z-index`, nên
+   nó không tự tạo 1 stacking context riêng — các pane bên trong
+   (`.leaflet-pane` z-index 400, marker/tooltip/popup pane tới 600-700, control
+   container tới 1000) bị so sánh thẳng với z-index của các phần tử NGOÀI map
+   (header, dropdown...) ở cùng stacking context cha, thay vì bị "nhốt" bên
+   trong map. Chỉ cần gán 1 z-index cụ thể (dù chỉ =0) cho `.leaflet-container`
+   là đủ để nó tự tạo stacking context riêng — mọi pane/control bên trong từ
+   đó trở đi chỉ còn so sánh z-index VỚI NHAU, cả khối map ra ngoài chỉ còn
+   tính là 1 layer duy nhất ở z-index 0, luôn nằm dưới header. */
+.leaflet-container {
+  z-index: 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Leaflet zoom control (+/-, `ListingsMap`/`LocationPickerMap`) — mặc định
+   Leaflet vẽ 1 khối viền mảnh xám chứa cả 2 nút dính liền nhau. Đổi thành 2
+   nút vuông bo góc riêng biệt, cách nhau 1 khoảng nhỏ, khớp ngôn ngữ nút
+   chung của site (viền ink 2px, hard offset shadow) — không đụng JS, chỉ
+   CSS thuần trên đúng 3 class Leaflet expose sẵn cho việc này. */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background: var(--paper-card) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 8px !important;
+  box-shadow: 2px 2px 0 rgba(43, 42, 36, 0.9) !important;
+  color: var(--ink) !important;
+  margin-bottom: 6px !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  border-color: var(--forest) !important;
+  color: var(--forest) !important;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Pagination (cuối danh sách kết quả tìm kiếm) — số trang active thành ô
+   vuông bo góc nhỏ nền forest/chữ trắng (không phải hình tròn — site ưu
+   tiên bo góc vừa phải hơn tròn hết cỡ ở hầu hết mọi nơi, tròn hết cỡ chỉ
+   dành riêng cho chip khu vực), số trang thường + nút prev/next viền
+   COLOR_BORDER 2px. */
+.ant-pagination-item {
+  border: 2px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--paper-card) !important;
+}
+
+.ant-pagination-item a {
+  color: var(--ink) !important;
+}
+
+.ant-pagination-item:not(.ant-pagination-item-active):hover {
+  border-color: var(--forest) !important;
+}
+
+.ant-pagination-item:not(.ant-pagination-item-active):hover a {
+  color: var(--forest) !important;
+}
+
+.ant-pagination-item-active {
+  background: var(--forest) !important;
+  border-color: var(--forest) !important;
+}
+
+.ant-pagination-item-active a {
+  color: #fff !important;
+}
+
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+  border: 2px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--paper-card) !important;
+  color: var(--ink) !important;
+}
+
+.ant-pagination-prev:not(.ant-pagination-disabled):hover .ant-pagination-item-link,
+.ant-pagination-next:not(.ant-pagination-disabled):hover .ant-pagination-item-link {
+  border-color: var(--forest) !important;
+  color: var(--forest) !important;
+}

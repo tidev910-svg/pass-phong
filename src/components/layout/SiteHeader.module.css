@@ -1,0 +1,165 @@
+.header {
+  background: var(--paper-card);
+  /* Viền dưới dày 3px có chủ đích theo phong cách bảng tin — không phải
+     hairline, không phải nhầm lẫn. */
+  border-bottom: 3px solid var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Grid 3 cột (không dùng flex + justify-content:space-between nữa) — lý do:
+   với flex, icon toolbar ở giữa chỉ canh giữa PHẦN KHÔNG GIAN CÒN LẠI giữa
+   logo và cụm nút phải, mà 2 bên không bằng nhau (logo ~90-140px, cụm nút
+   phải 250-300px) nên toolbar bị lệch hẳn về phía logo, nhìn "lấn sang một
+   bên". Grid buộc 2 cột trái/phải luôn chia đều phần thừa, nhờ vậy cột
+   giữa luôn nằm đúng tâm header bất kể logo hay cụm nút phải rộng hẹp khác
+   nhau.
+   Cột giữa dùng PX CỐ ĐỊNH (không phải `auto`) — đã thử `auto` nhưng gặp 1
+   quirk CSS khá hiểm: `.iconToolbar` bên trong có `overflow:hidden` +
+   `container-type` (cần để icon tự ẩn nhãn chữ khi thiếu chỗ), 2 thuộc
+   tính này khiến trình duyệt tính "kích thước tối thiểu tự động" của cột
+   `auto` = 0 NGAY CẢ khi thừa chỗ — icon biến mất hoàn toàn kể cả trên
+   desktop rộng. Dùng px cố định né hẳn quirk này, đổi lại là 1 con số cần
+   tự ước lượng đủ chỗ cho 3 icon thay vì để trình duyệt tự đo. */
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  /* 210px -> 273px: icon+chữ ở giữa đã tăng 30% (NavIconLink.module.css),
+     cột này phải tăng theo để 3 ô không tràn ra ngoài. */
+  grid-template-columns: 1fr 273px 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 40px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+  justify-self: start;
+}
+
+/* Thanh icon "Tìm tin/Bảng tin/Bản đồ" — kích thước/kiểu từng ô nằm ở
+   NavIconLink.module.css. */
+.iconToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  /* CHỦ Ý không set justify-self:center — `container-type:inline-size` bên
+     dưới bắt buộc bề rộng của chính phần tử này phải đến từ bên ngoài
+     (kích thước cột grid), không được tự co theo nội dung (containment
+     cấm phụ thuộc vòng content→size); nếu để justify-self:center (co theo
+     nội dung) thì bề rộng luôn tính ra 0 — đã tự gặp lỗi này. Nên: để mặc
+     định `stretch` lấp đầy hết cột 210px, rồi dùng justify-content:center
+     ở trên để các icon tự canh giữa BÊN TRONG khối đã lấp đầy đó — hình
+     ảnh cuối cùng giống hệt, chỉ khác cách đạt được. */
+  min-width: 0;
+  overflow: hidden;
+  /* Container query cho NavIconLink: chỗ trống thực tế của toolbar phụ
+     thuộc vào chiều rộng logo + số nút bên phải (khác nhau giữa đã/chưa
+     đăng nhập), không chỉ phụ thuộc viewport — nên để NavIconLink tự ẩn
+     nhãn chữ theo kích thước THẬT của chính nó thay vì đoán theo breakpoint
+     viewport (dễ lệch mỗi khi đổi ảnh logo, như đã gặp). */
+  container-type: inline-size;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: end;
+}
+
+.divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+@media (max-width: 760px) {
+  .inner {
+    grid-template-columns: 1fr 215px 1fr;
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .iconToolbar {
+    gap: 2px;
+  }
+
+  .rightActions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .inner {
+    /* Chật nhất: giá trị này chủ động thấp hơn ngưỡng container query
+       117px trong NavIconLink.module.css, để icon LUÔN rơi vào chế độ
+       chỉ-icon-không-chữ ở màn hẹp — tránh chữ bị cắt nham nhở giữa chừng
+       (đã từng gặp), đổi lại lúc đã đăng nhập (đủ chỗ hơn thật) cũng sẽ
+       hiện icon-only thay vì icon+chữ như trước, chấp nhận đánh đổi để
+       đảm bảo luôn hiện đủ 3 icon một cách ổn định, không phụ thuộc trạng
+       thái đăng nhập.
+       91px -> 135px: Playwright touch-target audit (2026-09-09) đo được
+       icon nav chỉ rộng ~30px thật (không phải 39px như CSS khai báo) —
+       `.tile` không có `flex-shrink:0` nên bị `.iconToolbar{overflow:hidden}`
+       bóp co lại vừa đúng 91px/3 icon. 135px = 3 icon x 44px (vùng chạm
+       tối thiểu, xem NavIconLink.module.css) + dư chút cho gap. Bù lại lấy
+       từ 2 cột `1fr` 2 bên (logo/postButton/avatar) — đã verify KHÔNG tràn
+       ngang trên cả 3 device test (375/390/393px) sau khi đổi. */
+    grid-template-columns: 1fr 135px 1fr;
+    padding: 8px 8px;
+    gap: 4px;
+  }
+
+  .iconToolbar {
+    gap: 0;
+  }
+
+  .rightActions {
+    gap: 6px;
+  }
+
+  /* Màn quá hẹp: bỏ icon "+" trong nút "Đăng tin" trước tiên để đủ chỗ —
+     chữ "Đăng tin" luôn giữ nguyên, không bao giờ rút gọn thành icon-only. */
+  .postIcon {
+    display: none;
+  }
+
+  /* Vẫn còn thiếu chỗ sau khi bỏ icon "+" → thu hẹp đệm, chữ giữ nguyên.
+     !important vì antd nạp style nút qua token CSS có độ ưu tiên cao hơn
+     class thường — cùng cách globals.css đang override .ant-btn-primary.
+     KHÔNG còn ép height xuống 34px (giá trị cũ) — dưới vùng chạm tối thiểu
+     44px, phát hiện qua Playwright touch-target audit (2026-09-09). Chừa
+     chỗ ngang bằng padding thay vì chiều cao. */
+  .postButton {
+    padding: 0 10px !important;
+    font-size: 13px !important;
+  }
+
+  .authButtons {
+    gap: 4px;
+  }
+
+  /* "Đăng nhập"/"Đăng ký" (chỉ hiện khi chưa đăng nhập) là trường hợp chật
+     nhất — thu nhỏ thêm 1 nấc nữa, vẫn giữ chữ đầy đủ. */
+  .authBtn {
+    padding: 0 8px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+  }
+}

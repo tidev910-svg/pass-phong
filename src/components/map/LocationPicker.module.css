@@ -1,0 +1,53 @@
+.root {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.mapBox {
+  height: 220px;
+}
+
+.mapLoading {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 13px;
+  background: var(--paper-card);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--paper-card);
+  border-top: 2px solid var(--ink);
+  font-size: 12.5px;
+}
+
+.hintText {
+  color: var(--ink-soft);
+}
+
+.coordsText {
+  color: var(--forest-dark);
+  font-weight: 600;
+}
+
+.clearBtn {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  color: var(--ink);
+}

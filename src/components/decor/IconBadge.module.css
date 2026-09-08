@@ -1,0 +1,23 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+/* Mảnh băng keo ghim ở mép trên badge — chỉ render khi truyền `tapeColor`. */
+.tape {
+  position: absolute;
+  top: -4px;
+  left: 6px;
+  width: 26px;
+  height: 9px;
+  transform: rotate(-8deg);
+  z-index: 1;
+}

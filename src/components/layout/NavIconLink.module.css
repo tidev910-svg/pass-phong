@@ -1,0 +1,125 @@
+/* Ô icon+chữ dùng cho thanh điều hướng giữa header (Tìm tin/Bảng tin/Bản đồ).
+   Tách riêng khỏi SiteHeader.module.css vì có state/kích thước responsive
+   riêng, dùng lại được nếu sau này thêm mục vào giữa header. */
+
+/* Kích thước icon + chữ đã tăng 30% so với bản gốc (yêu cầu người dùng) —
+   khung .tile và cột giữa header (SiteHeader.module.css) tăng theo tương
+   ứng để không bị tràn/đụng logo hay cụm nút bên phải. */
+.tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 78px;
+  height: 68px;
+  border-radius: 16px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+/* Icon là ảnh PNG (forest/mustard có sẵn), không phải icon font currentColor
+   — kích thước khai báo trực tiếp ở đây theo từng breakpoint thay vì qua
+   font-size như icon font trước đó. */
+.iconImg {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.tile:hover {
+  background: rgba(47, 82, 51, 0.08);
+  color: var(--ink);
+}
+
+.tileActive {
+  background: rgba(47, 82, 51, 0.14);
+  color: var(--forest);
+}
+
+.tileActive:hover {
+  background: rgba(47, 82, 51, 0.18);
+}
+
+.label {
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .tile {
+    width: 65px;
+    height: 60px;
+    border-radius: 13px;
+    gap: 3px;
+  }
+
+  .iconImg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .label {
+    font-size: 11.5px;
+  }
+}
+
+/* Ngưỡng hẹp hơn — điện thoại nhỏ (~375px trở xuống), thu gọn thêm 1 nấc để
+   đủ chỗ cho toolbar + nút "Đăng tin" + avatar trên cùng 1 hàng. */
+@media (max-width: 400px) {
+  .tile {
+    width: 57px;
+    height: 55px;
+    border-radius: 12px;
+    gap: 1px;
+  }
+
+  .iconImg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .label {
+    font-size: 10.5px;
+  }
+}
+
+/* Phòng hờ theo CHỖ TRỐNG THẬT của toolbar (container query trên chính
+   .iconToolbar, khai báo ở SiteHeader.module.css), không đoán theo viewport
+   nữa — vì chỗ trống còn lại phụ thuộc cả vào bề rộng logo (đổi ảnh là đổi
+   tỉ lệ khung) lẫn có bao nhiêu nút bên phải (chưa đăng nhập có 3 nút, đăng
+   nhập chỉ có avatar), 2 biến số mà 1 breakpoint viewport cố định không
+   theo kịp — từng bị lệch khi đổi ảnh logo. Dưới ngưỡng này thì dù đủ chữ
+   cũng sẽ bị cắt nham nhở giữa chừng, nên ẩn hẳn nhãn, chỉ còn icon —
+   không bao giờ lùi về pattern menu ẩn.
+   117px -> 145px: cột header dành cho toolbar này đã nới 91px -> 135px
+   (SiteHeader.module.css, để 3 icon đủ chỗ 44px vùng chạm) — 135px > 117px
+   (ngưỡng cũ) nên chế độ icon-only KHÔNG còn tự kích hoạt ở màn hẹp nhất
+   nữa (label hiện lại, bị bóp/cắt chữ — phát hiện qua Playwright regression
+   ngay sau khi nới cột). Nâng ngưỡng lên 145px (> 135px, dư biên) để icon-
+   only vẫn kích hoạt đúng như thiết kế gốc ở đúng những màn hẹp cần nó. */
+@container (max-width: 145px) {
+  .tile {
+    /* 39px -> 44px: Playwright touch-target audit (2026-09-09) đo được
+       chiều rộng THẬT chỉ ~30px (không phải 39px như khai báo) — `.tile`
+       thiếu `flex-shrink:0` nên bị `.iconToolbar{overflow:hidden}` bóp co
+       lại khi 3 icon cộng dồn rộng hơn cột header dành cho nó. Cả 2 phải
+       sửa cùng lúc: rộng ra 44px (vuông với height, đủ chuẩn WCAG/Apple
+       HIG) VÀ chặn co (`flex-shrink:0`) — nếu chỉ đổi số mà không chặn co
+       thì vẫn bị bóp lại y hệt. Cột header chứa toolbar này đã nới rộng
+       tương ứng ở `SiteHeader.module.css`. */
+    width: 44px;
+    flex-shrink: 0;
+    height: 44px;
+    gap: 0;
+    border-radius: 10px;
+  }
+
+  .label {
+    display: none;
+  }
+}

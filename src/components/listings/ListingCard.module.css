@@ -1,0 +1,88 @@
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardWrap {
+  position: relative;
+}
+
+/*
+ * Thẻ tin đăng — "tờ giấy ghim trên bảng tin": viền ink 2px, bo góc rất nhỏ,
+ * hard offset shadow (KHÔNG blur), nghiêng nhẹ theo `--tilt` (set inline từ
+ * getCardTiltDeg(id) — deterministic theo id tin, không đổi giữa các lần
+ * render). Double-class ở .pinnedCard.pinnedCard để thắng độ ưu tiên so với
+ * `.ant-card` mặc định mà không cần !important.
+ */
+.pinnedCard.pinnedCard {
+  background: var(--paper-card);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 5px 5px 0 rgba(43, 42, 36, 0.9);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.cardLink:hover .pinnedCard.pinnedCard {
+  transform: rotate(var(--tilt, 0deg)) translate(-2px, -2px);
+  box-shadow: 7px 7px 0 rgba(43, 42, 36, 0.9);
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--forest);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.passedBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+/* Mảnh băng keo washi ghim ở mép trên thẻ — KHÔNG chữ (chữ viết tay Caveat
+   chỉ dành riêng cho TapeLabel, dùng rất tiết chế ở nơi khác). */
+.washiTape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 90px;
+  height: 26px;
+  background: var(--mustard);
+  opacity: 0.85;
+  transform: translateX(-50%) rotate(-3deg);
+  box-shadow: 1px 1px 3px rgba(43, 42, 36, 0.35);
+  z-index: 1;
+}
+
+.body {
+  padding: 14px 16px 16px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 4px;
+}

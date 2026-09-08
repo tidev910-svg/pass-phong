@@ -1,0 +1,50 @@
+.logo {
+  display: block;
+  width: auto;
+  /* Ảnh có viền ngoài trong suốt khá rộng quanh chữ (hiệu ứng glow) — object-fit
+     contain giữ đúng tỉ lệ file gốc, không cắt/méo. */
+  object-fit: contain;
+}
+
+/* Kích thước nhỏ — dùng ở header, nằm ngang thanh nav */
+.sm {
+  height: 34px;
+}
+
+/* Kích thước trung bình — dùng ở header, nằm ngang thanh nav */
+.md {
+  height: 60px;
+}
+
+/* Kích thước lớn — dùng đứng riêng ở trang đăng nhập/đăng ký */
+.lg {
+  height: 120px;
+}
+
+/* Header giờ luôn 1 hàng (không còn hamburger che bớt nội dung ở mobile) —
+   thu nhỏ logo dần để nhường chỗ cho icon toolbar + nút Đăng tin + avatar
+   cùng nằm chung 1 hàng ở màn hẹp. Chỉ ảnh hưởng `.sm`/`.md` (dùng ở
+   header) — `.lg` ở trang đăng nhập/đăng ký không đổi vì trang đó có
+   riêng 1 hàng cho logo, không phải chia chỗ với gì khác. */
+@media (max-width: 760px) {
+  .sm {
+    height: 28px;
+  }
+
+  .md {
+    height: 34px;
+  }
+}
+
+@media (max-width: 400px) {
+  .sm {
+    height: 22px;
+  }
+
+  /* File logo mới có khung rộng hơn bản cũ (~2.3:1 thay vì 1.5:1) — cùng
+     chiều cao thì chiều rộng lớn hơn hẳn, nên ở màn hẹp phải hạ chiều cao
+     xuống thấp hơn mốc trước để bù lại, tránh lại đụng icon toolbar. */
+  .md {
+    height: 17px;
+  }
+}

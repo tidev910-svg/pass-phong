@@ -1,0 +1,14 @@
+.wrap {
+  margin-top: 24px;
+}
+
+/* Ink bar mặc định của antd Tabs chỉ 2px — spec cần 3px. Màu ink bar/màu chữ
+   tab active đã tự lên COLOR_FOREST vì antd suy từ `colorPrimary` (đã cấu
+   hình forest trong theme-config.ts), không cần override thêm màu ở đây. */
+:global(.ant-tabs-ink-bar) {
+  height: 3px !important;
+}
+
+:global(.ant-tabs-tab .ant-tabs-tab-btn) {
+  color: var(--ink-soft);
+}

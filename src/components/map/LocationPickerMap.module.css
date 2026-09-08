@@ -1,0 +1,8 @@
+.mapRoot {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* Style ghim (.pinWrap/.pin) đã chuyển sang MapIcons.module.css dùng chung
+   với ghim tâm tìm kiếm ở ListingsMap — xem icons.ts. */

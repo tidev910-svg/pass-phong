@@ -1,0 +1,12 @@
+/* Feed 1 cột, giới hạn bề rộng giống Facebook (không kéo full-width màn hình
+   lớn) — khác lưới nhiều cột dùng ở trang chủ/hồ sơ. */
+.column {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

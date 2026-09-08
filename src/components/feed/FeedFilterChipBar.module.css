@@ -1,0 +1,19 @@
+/* Cuộn ngang, ẩn scrollbar — phần "ngoại lệ style" duy nhất trong thanh này
+   (không thêm màu nhấn mới, chỉ thêm chiều cuộn). */
+.scrollRow {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+
+.scrollRow::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollRow > * {
+  flex-shrink: 0;
+}

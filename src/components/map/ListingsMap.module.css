@@ -1,0 +1,125 @@
+/* `width/height:100%` (giá trị cũ) không resolve được trên WebKit trong
+   trường hợp cha (`.mapPane`) chỉ có chiều cao "thật" nhờ flexbox
+   (`flex:1`), không phải 1 giá trị `height` khai báo tường minh — dù
+   `.mapPane` đo được đúng bằng DevTools/Playwright (>0), % height của con
+   vẫn resolve ra 0 trên WebKit (xác nhận thật qua Playwright: `.mapPane`
+   119px nhưng `.mapRoot` bên trong vẫn 0px). `position:absolute; inset:0`
+   né hẳn quy tắc resolve % height — chỉ cần containing block có vị trí xác
+   định (`.mapPane{position:relative}`, đã có sẵn), không phụ thuộc cách
+   containing block có chiều cao bằng flex hay height tường minh. */
+.mapRoot {
+  position: absolute;
+  inset: 0;
+}
+
+/* Leaflet gán class 'leaflet-div-icon' mặc định (nền trắng + viền xám) cho
+   divIcon — reset về trong suốt để tự kiểm soát hoàn toàn bằng .pin. */
+.pinWrap {
+  background: transparent !important;
+  border: none !important;
+}
+
+/*
+ * Marker giá dạng "price-pin" kiểu Booking.com: pill trắng viền forest, có
+ * đuôi tam giác trỏ xuống đúng toạ độ. Dùng translate để neo đúng đầu nhọn
+ * của đuôi vào điểm toạ độ (Leaflet đặt .pinWrap tại đúng pixel toạ độ).
+ * Theo spec: soft drop-shadow ở đây là NGOẠI LỆ CÓ CHỦ ĐÍCH (không phải hard
+ * offset shadow như phần còn lại của site) — mô phỏng pin nổi trên bản đồ.
+ */
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--paper-card);
+  border: 2px solid var(--forest);
+  border-radius: 16px;
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(43, 42, 36, 0.35);
+  transition: background 150ms ease, color 150ms ease, transform 150ms ease;
+  cursor: pointer;
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--forest);
+}
+
+.pinActive {
+  background: var(--forest);
+  color: #fff;
+  transform: translate(-50%, -100%) scale(1.08);
+}
+
+/* Marker cho tin đã pass — không phải màu nhấn chính, giữ trung tính để
+   không lẫn với marker tin đang active/hiển thị bình thường. */
+.pinPassed {
+  border-color: var(--ink-soft);
+  opacity: 0.75;
+}
+
+.pinPassed::after {
+  border-top-color: var(--ink-soft);
+}
+
+/* --- Override popup mặc định của Leaflet để khớp style thẻ tin của site --- */
+:global(.leaflet-popup-content-wrapper) {
+  background: var(--paper-card);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: none;
+  padding: 0;
+}
+
+:global(.leaflet-popup-content) {
+  margin: 0;
+  width: 220px !important;
+}
+
+:global(.leaflet-popup-tip-container) {
+  overflow: hidden;
+}
+
+:global(.leaflet-popup-tip) {
+  background: var(--paper-card);
+  border: 2px solid var(--ink);
+  box-shadow: none;
+}
+
+:global(.leaflet-popup-close-button) {
+  color: var(--ink-soft) !important;
+}
+
+.popupCard {
+  padding: 12px;
+}
+
+.popupPrice {
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--mustard-dark);
+  margin-top: 6px;
+}
+
+.popupDescription {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}

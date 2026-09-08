@@ -1,0 +1,178 @@
+/* `popupRender` trả JSX tự viết (không dùng prop `menu`) nên antd không tự
+   thêm nền/shadow/padding mặc định của Dropdown — class này chỉ để dự phòng
+   nếu sau này cần override thêm, hiện chưa cần style gì. */
+.overlay {
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.triggerName {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Màn hẹp: bỏ hẳn tên cạnh avatar thay vì cắt còn vài ký tự khó đọc — tên
+   đầy đủ vẫn thấy được bên trong panel khi mở dropdown. */
+@media (max-width: 400px) {
+  .triggerName {
+    display: none;
+  }
+
+  .trigger {
+    gap: 4px;
+  }
+}
+
+.avatarLetterSm {
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: #fff;
+}
+
+.avatarLetterLg {
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #fff;
+}
+
+/* Panel dropdown — hard offset shadow NHỎ HƠN pinned card (3px thay vì 5px)
+   để phân biệt "nổi nhẹ" so với thẻ tin, nhưng vẫn hard-edge (không blur)
+   đúng nguyên tắc chung của site — không dùng shadow mờ mặc định của antd. */
+.panel {
+  position: relative;
+  width: 280px;
+  background: var(--paper-card);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 rgba(43, 42, 36, 0.9);
+  padding: 20px 16px 10px;
+  margin-top: 10px;
+}
+
+.tape {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--mustard);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 3px;
+  transform: rotate(-3deg);
+  box-shadow: 1px 1px 0 rgba(43, 42, 36, 0.3);
+}
+
+.panelHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding-top: 6px;
+}
+
+.panelName {
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.panelUsername {
+  margin-top: -4px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-around;
+  margin: 16px 0;
+  padding: 12px 0;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px dashed var(--border);
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--forest);
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 10px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 8px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  font-family: var(--font-be-vietnam-pro), "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+/* Hover dùng forest ở alpha thấp — không phải hex mới, chỉ giảm độ mờ của
+   màu nhấn chính đã có, giữ đúng kỷ luật 2 màu nhấn của site. */
+.menuItem:hover {
+  background: rgba(47, 82, 51, 0.08);
+}
+
+.menuIcon {
+  color: var(--forest);
+  font-size: 16px;
+  flex: none;
+}
+
+/* #ff4d4f = colorError mặc định của antd (dust red 5) — KHÔNG phải hex tự
+   chế, chính là màu đỏ mà mọi nút "Xoá" (danger) trong app đã dùng sẵn qua
+   antd, project không override colorError trong theme-config.ts nên đây là
+   giá trị thật đang chạy. Không thêm hex mới, chỉ tái dùng giá trị có sẵn. */
+.menuItemDanger,
+.menuItemDanger .menuIcon {
+  color: #ff4d4f;
+}
+
+.menuItemDanger:hover {
+  background: rgba(255, 77, 79, 0.08);
+}

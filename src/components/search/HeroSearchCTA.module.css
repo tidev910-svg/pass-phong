@@ -1,0 +1,35 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+/* Nút hero "Tìm ngay" — cố ý dùng mustard (không phải forest như mọi nút
+   primary khác trong site) để nổi bật hẳn lên so với các CTA còn lại trên
+   trang, vẫn đúng 2 màu nhấn đã chốt (không thêm màu thứ 3). Border/shadow
+   giữ nguyên quy ước `.ant-btn-primary` toàn cục (globals.css) — chỉ override
+   nền/chữ/kích thước/độ nghiêng ở đây. Nghiêng nhẹ tĩnh (giống thẻ tin đăng)
+   thay vì hiệu ứng chuyển động tự phát — style "Dorm Bulletin Board" cấm auto
+   load-in animation, "bắt mắt" phải đến từ màu sắc/kích thước/layout tĩnh +
+   tương tác khi hover/bấm (đã có sẵn qua .ant-btn-primary toàn cục). */
+.button {
+  height: auto !important;
+  padding: 18px 40px !important;
+  font-family: var(--font-baloo-2), "Segoe UI", sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+  background: var(--mustard) !important;
+  border-radius: 14px !important;
+  transform: rotate(-1.5deg);
+}
+
+.button:not(:disabled):hover {
+  background: var(--mustard-dark) !important;
+  color: var(--ink) !important;
+  /* .ant-btn-primary toàn cục đã tự dịch nút vào shadow khi hover (cùng mức
+     specificity, thứ tự nạp CSS giữa globals.css và CSS module không đảm
+     bảo) — !important để chắc chắn giữ được độ nghiêng khi dịch, không bị
+     rule toàn cục ghi đè mất nghiêng. */
+  transform: rotate(-1.5deg) translate(2px, 2px) !important;
+}

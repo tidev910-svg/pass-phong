@@ -1,0 +1,36 @@
+/* Leaflet gán class 'leaflet-div-icon' mặc định (nền trắng + viền xám) cho
+   divIcon — reset về trong suốt, để tự kiểm soát hoàn toàn bằng .pin. */
+.pinWrap {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ghim kiểu "teardrop" cổ điển bằng CSS thuần (không dùng ảnh icon mặc định
+   của Leaflet — asset đó vỡ đường dẫn khi bundle qua Next.js/webpack).
+   border-radius bất đối xứng + xoay 45° tạo hình giọt nước, đầu nhọn neo
+   đúng vào toạ độ đã chọn. Dùng chung cho LocationPicker (ghim chọn vị trí
+   đăng tin) và ghim tâm tìm kiếm ở chế độ "Tìm theo nhu cầu" (ListingsMap)
+   — không phải marker giá (xem `.pin`/`buildPriceIcon` riêng trong
+   `ListingsMap.module.css`, mục đích khác hẳn). */
+.pin {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--forest);
+  border: 2px solid var(--forest-dark);
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(43, 42, 36, 0.35);
+  cursor: grab;
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--paper-card);
+}
