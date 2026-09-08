@@ -34,8 +34,27 @@ const SITE_NAME = "Pass Phòng Cần Thơ";
 const SITE_DESCRIPTION =
   "Đăng và tìm tin pass phòng/sang nhượng cọc ở Cần Thơ — lọc theo khu vực, giá, ngày cần pass. Lưu tìm kiếm để không bỏ lỡ tin mới.";
 
+/**
+ * `??` không bắt được chuỗi rỗng (`SITE_URL=""` — vd biến môi trường được
+ * khai báo trên Vercel nhưng để trống) — `new URL("")` throw "Invalid URL",
+ * sập toàn bộ build (đã gặp thật lúc deploy). Validate + fallback tường
+ * minh thay vì tin thẳng giá trị env, để 1 biến môi trường thiếu/sai không
+ * bao giờ làm sập cả site — chỉ log cảnh báo, ảnh Open Graph tạm sai domain.
+ */
+function resolveSiteUrl(): URL {
+  const raw = process.env.SITE_URL?.trim();
+  if (raw) {
+    try {
+      return new URL(raw);
+    } catch {
+      console.error(`SITE_URL không hợp lệ ("${raw}") — dùng tạm localhost, kiểm tra lại biến môi trường.`);
+    }
+  }
+  return new URL("http://localhost:3000");
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL ?? "http://localhost:3000"),
+  metadataBase: resolveSiteUrl(),
   title: {
     default: `${SITE_NAME} — Đăng & tìm tin pass phòng nhanh chóng`,
     template: `%s | ${SITE_NAME}`,
